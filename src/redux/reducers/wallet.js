@@ -1,1 +1,14 @@
-// Esse reducer será responsável por tratar o todas as informações relacionadas as despesas
+const INITIAL_STATE = {
+  despesa: '',
+};
+
+const wallet = (store = INITIAL_STATE, action) => {
+  switch (action.type) {
+  case 'ADD_DESPESA':
+    return ({ ...store, despesa: action.despesa });
+  default:
+    return store;
+  }
+};
+
+export default wallet;
