@@ -7,17 +7,35 @@ import { addMoedas } from '../redux/actions';
 import Table from '../components/Table';
 
 class Wallet extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      editing: false,
+      edit: '0',
+    };
+  }
+
   componentDidMount() {
     const { addMoedas: addMoedasAction } = this.props;
     addMoedasAction('https://economia.awesomeapi.com.br/json/all');
   }
 
+  onEditButtonClick = ({ target }) => {
+    const { value } = target;
+    this.setState({ editing: true, edit: value });
+  }
+
+  editFalse = () => {
+    this.setState({ editing: false });
+  }
+
   render() {
+    const { editing, edit } = this.state;
     return (
       <div>
         <Header />
-        <WalletForm />
-        <Table />
+        <WalletForm editing={ editing } editId={ edit } editFalse={ this.editFalse } />
+        <Table onEditButtonClick={ this.onEditButtonClick } />
       </div>
     );
   }

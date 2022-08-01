@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { addDespesa } from '../redux/actions';
+import { addDespesa, deleteExpense } from '../redux/actions';
 
 class WalletForm extends Component {
   constructor() {
@@ -13,6 +13,7 @@ class WalletForm extends Component {
       moeda: 'USD',
       pagamento: 'Dinheiro',
       tag: 'Alimentação',
+      editingItem: false,
     };
   }
 
@@ -24,10 +25,10 @@ class WalletForm extends Component {
 
   onButtonClick = () => {
     const { addNewExpense, alimentacao } = this.props;
-    const { valor, descricao, moeda, pagamento, tag, id } = this.state;
+    const { valor, descricao, moeda, pagamento, tag, id, prevId, editingItem } = this.state;
     const newObj = {
       value: valor,
-      id,
+      id: editingItem ? prevId : id,
       currency: moeda,
       method: pagamento,
       tag,
@@ -39,13 +40,28 @@ class WalletForm extends Component {
       valor: '',
       moeda: 'USD',
       pagamento: 'Dinheiro',
-      tag: alimentacao }));
+      tag: alimentacao,
+      editingItem: prevState.editingItem === true && !prevState.editingItem }));
   }
 
   render() {
-    const { currencies, alimentacao } = this.props;
-    const { descricao, valor, tag, pagamento, moeda } = this.state;
-    console.log(currencies);
+    const { currencies, alimentacao,
+      editing, editId, expenses, editFalse, deleteExpenseAction } = this.props;
+    const { descricao, valor, tag, pagamento, moeda, editingItem } = this.state;
+    const index = parseInt(editId, 10);
+    if (editing) {
+      this.setState({
+        descricao: expenses[index].description,
+        valor: expenses[index].value,
+        moeda: expenses[index].currency,
+        pagamento: expenses[index].method,
+        tag: expenses[index].tag,
+        editingItem: true,
+        prevId: expenses[index].id,
+      });
+      editFalse();
+      deleteExpenseAction(index);
+    }
     return (
       <form>
         <label htmlFor="valor">
@@ -123,15 +139,21 @@ class WalletForm extends Component {
             <option value="Saúde">Saúde</option>
           </select>
         </label>
-        <button type="button" onClick={ this.onButtonClick }>Adicionar despesa</button>
+        <button type="button" onClick={ this.onButtonClick }>
+          {editingItem ? 'Editar despesa' : 'Adicionar despesa' }
+        </button>
       </form>
     );
   }
 }
 
-const mapStateToProps = (state) => ({ currencies: state.wallet.currencies });
+const mapStateToProps = (state) => ({
+  currencies: state.wallet.currencies,
+  expenses: state.wallet.expenses,
+});
 const mapDispatchToProps = (dispatch) => ({
   addNewExpense: (obj) => dispatch(addDespesa('https://economia.awesomeapi.com.br/json/all', obj)),
+  deleteExpenseAction: (index) => dispatch(deleteExpense(index)),
   alimentacao: 'Alimentação',
 });
 
@@ -139,6 +161,11 @@ WalletForm.propTypes = {
   currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
   addNewExpense: PropTypes.func.isRequired,
   alimentacao: PropTypes.string.isRequired,
+  editId: PropTypes.string.isRequired,
+  expenses: PropTypes.arrayOf(PropTypes.object).isRequired,
+  editing: PropTypes.bool.isRequired,
+  deleteExpenseAction: PropTypes.func.isRequired,
+  editFalse: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletForm);

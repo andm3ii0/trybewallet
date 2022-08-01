@@ -7,11 +7,12 @@ class Table extends Component {
   onDeleteButtonClick = ({ target }) => {
     const { value } = target;
     const { deleteExpenseAction } = this.props;
-    deleteExpenseAction(value);
+    console.log(value);
+    deleteExpenseAction(parseInt(value, 10));
   }
 
   render() {
-    const { expenses } = this.props;
+    const { expenses, onEditButtonClick } = this.props;
     return (
       <div>
         <table>
@@ -29,7 +30,12 @@ class Table extends Component {
             </tr>
           </thead>
           <tbody>
-            {expenses.map((expense, index) => (
+            {expenses.sort((a, b) => {
+              if (a.id < b.id) {
+                return -1;
+              }
+              return true;
+            }).map((expense, index) => (
               <tr key={ index }>
                 <td>{ expense.description }</td>
                 <td>{ expense.tag }</td>
@@ -54,6 +60,14 @@ class Table extends Component {
                   >
                     Deletar
                   </button>
+                  <button
+                    value={ index }
+                    data-testid="edit-btn"
+                    type="button"
+                    onClick={ onEditButtonClick }
+                  >
+                    Editar
+                  </button>
                 </td>
               </tr>
             ))}
@@ -75,6 +89,7 @@ const mapDispatchToProps = (dispatch) => ({
 Table.propTypes = {
   expenses: PropTypes.arrayOf(PropTypes.object).isRequired,
   deleteExpenseAction: PropTypes.func.isRequired,
+  onEditButtonClick: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Table);

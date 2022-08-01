@@ -16,7 +16,6 @@ class Header extends Component {
     let gastosValor = 0;
     expenses.map((expense) => expense.value * expense.exchangeRates[expense.currency].ask)
       .forEach((valor) => { gastosValor += valor; });
-    console.log(gastosValor);
     return (
       <div>
         <p data-testid="email-field">
