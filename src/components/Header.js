@@ -24,13 +24,13 @@ class Header extends Component {
           {' '}
           {email}
         </p>
-        <p>
+        <div>
           Gastos Totais:
           {' '}
           <span data-testid="header-currency-field">BRL</span>
           {' '}
           <p data-testid="total-field">{(gastos + gastosValor).toFixed(2)}</p>
-        </p>
+        </div>
       </div>
     );
   }
