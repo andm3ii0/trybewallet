@@ -5,6 +5,12 @@ export const REQUEST_SUCSSES = 'REQUEST_SUCSSES';
 export const REQUEST_ERROR = 'REQUEST_ERROR';
 export const ADD_EXPENSE = 'ADD_EXPENSE';
 export const REQUEST_COTACAO = 'REQUEST_COTACAO';
+export const DELETE_EXPENSE = 'DELETE_EXPENSE';
+
+export const deleteExpense = (index) => ({
+  type: DELETE_EXPENSE,
+  index,
+});
 
 export const addEmail = (email) => ({
   type: ADD_EMAIL,
