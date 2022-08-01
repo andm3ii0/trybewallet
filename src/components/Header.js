@@ -11,8 +11,12 @@ class Header extends Component {
   }
 
   render() {
-    const { email } = this.props;
+    const { email, expenses } = this.props;
     const { gastos } = this.state;
+    let gastosValor = 0;
+    expenses.map((expense) => expense.value * expense.exchangeRates[expense.currency].ask)
+      .forEach((valor) => { gastosValor += valor; });
+    console.log(gastosValor);
     return (
       <div>
         <p data-testid="email-field">
@@ -20,12 +24,12 @@ class Header extends Component {
           {' '}
           {email}
         </p>
-        <p data-testid="total-field">
+        <p>
           Gastos Totais:
           {' '}
           <span data-testid="header-currency-field">BRL</span>
           {' '}
-          {gastos}
+          <p data-testid="total-field">{(gastos + gastosValor).toFixed(2)}</p>
         </p>
       </div>
     );
@@ -35,10 +39,12 @@ class Header extends Component {
 const mapStateToProps = (state) => ({
   email: state.user.email,
   currencies: state.wallet.currencies,
+  expenses: state.wallet.expenses,
 });
 
 Header.propTypes = {
   email: PropTypes.string.isRequired,
+  expenses: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default connect(mapStateToProps, null)(Header);
