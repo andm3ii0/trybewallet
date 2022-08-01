@@ -25,7 +25,8 @@ class WalletForm extends Component {
 
   onButtonClick = () => {
     const { addNewExpense, alimentacao } = this.props;
-    const { valor, descricao, moeda, pagamento, tag, id, prevId, editingItem } = this.state;
+    const { valor, descricao,
+      moeda, pagamento, tag, id, prevId, editingItem } = this.state;
     const newObj = {
       value: valor,
       id: editingItem ? prevId : id,

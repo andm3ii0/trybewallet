@@ -13,6 +13,7 @@ class Table extends Component {
 
   render() {
     const { expenses, onEditButtonClick } = this.props;
+    const i = -1;
     return (
       <div>
         <table>
@@ -32,7 +33,7 @@ class Table extends Component {
           <tbody>
             {expenses.sort((a, b) => {
               if (a.id < b.id) {
-                return -1;
+                return i;
               }
               return true;
             }).map((expense, index) => (
