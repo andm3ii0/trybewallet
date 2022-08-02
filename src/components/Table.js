@@ -37,7 +37,7 @@ class Table extends Component {
               }
               return true;
             }).map((expense, index) => (
-              <tr key={ index }>
+              <tr key={ expense.id }>
                 <td>{ expense.description }</td>
                 <td>{ expense.tag }</td>
                 <td>{ expense.method }</td>
